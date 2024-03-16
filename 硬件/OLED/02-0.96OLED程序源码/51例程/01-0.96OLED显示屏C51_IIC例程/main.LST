@@ -1,0 +1,91 @@
+C51 COMPILER V9.59.0.0   MAIN                                                              03/04/2023 12:03:37 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: H:\Software\Keil 5\Keil_v5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\SRC) DEBUG OBJE
+                    -CTEXTEND
+
+line level    source
+
+   1          //////////////////////////////////////////////////////////////////////////////////       
+   2          //本程序只供学习使用，未经作者许可，不得用于其它任何用途
+   3          //中景园电子
+   4          //店铺地址：http://shop73023976.taobao.com/?spm=2013.1.0.0.M4PqC2
+   5          //
+   6          //  文 件 名   : main.c
+   7          //  版 本 号   : v2.0
+   8          //  作    者   : HuangKai
+   9          //  生成日期   : 2014-0101
+  10          //  最近修改   : 
+  11          //  功能描述   : OLED 4接口演示例程(51系列)
+  12          //              说明: 
+  13          //              ----------------------------------------------------------------
+  14          //              GND    电源地
+  15          //              VCC  接5V或3.3v电源
+  16          //              SCL  P10（SCL）
+  17          //              SDA  P11（SDA）
+  18          //              RES  P12 注：SPI接口显示屏改成IIC接口时需要接RES引脚
+  19          //                           IIC接口显示屏用户请忽略
+  20          //              ----------------------------------------------------------------
+  21          // 修改历史   :
+  22          // 日    期   : 
+  23          // 作    者   : HuangKai
+  24          // 修改内容   : 创建文件
+  25          //版权所有，盗版必究。
+  26          //Copyright(C) 中景园电子2014/3/16
+  27          //All rights reserved
+  28          //******************************************************************************/
+  29          #include "REG51.h"
+  30          #include "oled.h"
+  31          #include "bmp.h"
+  32          
+  33          int main(void)
+  34          {       
+  35   1              u8 t=' ';
+  36   1              OLED_Init();//初始化OLED
+  37   1              OLED_ColorTurn(0);//0正常显示，1 反色显示
+  38   1          OLED_DisplayTurn(0);//0正常显示 1 屏幕翻转显示
+  39   1              while(1) 
+  40   1              {
+  41   2                      OLED_DrawBMP(0,0,128,64,BMP1);
+  42   2                      delay_ms(500);
+  43   2                      OLED_Clear();
+  44   2                      OLED_ShowChinese(0,0,0,16);//中
+  45   2                      OLED_ShowChinese(18,0,1,16);//景
+  46   2                      OLED_ShowChinese(36,0,2,16);//园
+  47   2                      OLED_ShowChinese(54,0,3,16);//电
+  48   2                      OLED_ShowChinese(72,0,4,16);//子
+  49   2                      OLED_ShowChinese(90,0,5,16);//科
+  50   2                      OLED_ShowChinese(108,0,6,16);//技
+  51   2                      OLED_ShowString(8,2,"ZHONGJINGYUAN",16);
+  52   2                      OLED_ShowString(20,4,"2014/05/01",16);
+  53   2                      OLED_ShowString(0,6,"ASCII:",16);  
+  54   2                      OLED_ShowString(63,6,"CODE:",16);
+C51 COMPILER V9.59.0.0   MAIN                                                              03/04/2023 12:03:37 PAGE 2   
+
+  55   2                      OLED_ShowChar(48,6,t,16);
+  56   2                      t++;
+  57   2                      if(t>'~')t=' ';
+  58   2                      OLED_ShowNum(103,6,t,3,16);
+  59   2                      delay_ms(500);
+  60   2                      OLED_Clear();
+  61   2              }         
+  62   1              
+  63   1      }
+  64          
+  65                  
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    247    ----
+   CONSTANT SIZE    =   1062    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       1
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
