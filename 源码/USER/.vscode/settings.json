@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "*.cjson": "jsonc",
+        "*.wxss": "css",
+        "*.wxs": "javascript",
+        "dht11.h": "c",
+        "onenet.h": "c",
+        "esp8266.h": "c",
+        "oled.h": "c"
+    }
+}

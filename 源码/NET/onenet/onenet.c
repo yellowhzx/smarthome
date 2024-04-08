@@ -28,8 +28,8 @@
 
 
 extern unsigned char esp8266_buf[128];
-extern u8 alarmFlag;   //报警标志部分
-extern u8 alarmBusy;
+extern u8 alarmFlag;	//报警标志部分
+extern u8 alarmBusy;	//报警空闲部分
 
 
 //==========================================================
@@ -223,19 +223,16 @@ void OneNet_RevPro(unsigned char *cmd)
 					{
 						json_value = cJSON_GetObjectItem(json , "value");
 						if(json_value->valueint)
-                            alarmFlag = 1;//打开报警器
-						else 
-                            alarmFlag = 0;//关闭报警器
-						alarmBusy = 0;//上位机控制跟手动控制具有一样的优先级 优先于自动控制，因此要把alarm_is_free 归0
+						{
+							alarmFlag = 1;//打开报警器
+							alarmBusy = 1;
+						}
+						else
+						{
+							alarmFlag = 0;//关闭报警器
+							alarmBusy = 0;
+						}
 					}
-//					if(json_value->valueint)//json_value > 0且为整形
-//					{
-//						LED0 = 0;//打开LED0 
-//					}
-//					else
-//					{
-//						LED0 = 1;//关闭LED0 
-//					}
 				}
 				cJSON_Delete(json);
 			}

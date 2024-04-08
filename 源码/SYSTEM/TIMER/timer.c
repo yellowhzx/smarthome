@@ -5,12 +5,16 @@
 
 char oledBuf[20];
 
-extern u8 humidityH;       //湿度整数部分
-extern u8 humidityL;       //湿度小数部分
-extern u8 temperatureH;    //温度整数部分
-extern u8 temperatureL;    //温度小数部分
-extern float Light;        //光照部分
-extern u8 alarmFlag;
+extern u8 humidityH;		//湿度整数部分
+extern u8 humidityL;		//湿度小数部分
+extern u8 temperatureH;		//温度整数部分
+extern u8 temperatureL;		//温度小数部分
+extern float Light;			//光照部分
+extern u8 alarmFlag;		//报警部分
+
+extern unsigned short timeCount;	//发送间隔变量
+extern unsigned short timeflag2s;	//1s
+extern unsigned short timeflag5s;	//5s
 
 //通用定时器中断初始化
 //这里时钟选择为APB1的2倍，而APB1为36M
@@ -49,7 +53,7 @@ void TIM3_IRQHandler(void)   //TIM3中断
 {
 	if (TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET) //检查指定的TIM中断发生与否:TIM 中断源 
     {
-		TIM_ClearITPendingBit(TIM3, TIM_IT_Update  );  //清除TIMx的中断待处理位:TIM 中断源 
+		TIM_ClearITPendingBit(TIM3, TIM_IT_Update);  //清除TIMx的中断待处理位:TIM 中断源 
         if(alarmFlag)
         {
             LED1=!LED1;
@@ -60,6 +64,17 @@ void TIM3_IRQHandler(void)   //TIM3中断
             LED1=1;
             BEEP=1;
 		}
+		if(timeCount++ % 4 == 0)
+			timeflag2s = 1;
+		else
+			timeflag2s = 0;
+		if(timeCount == 9)
+		{
+			timeflag5s = 1;
+			timeCount = 0;
+		}
+		else
+			timeflag5s = 0;
     }
 }
 
@@ -94,16 +109,22 @@ void TIM2_Int_Init(u16 arr,u16 psc)
 void TIM2_IRQHandler(void)   //TIM2中断
 {
 	if (TIM_GetITStatus(TIM2, TIM_IT_Update) != RESET) //检查指定的TIM中断发生与否:TIM 中断源 
-		{
+	{
 		TIM_ClearITPendingBit(TIM2, TIM_IT_Update  );  //清除TIMx的中断待处理位:TIM 中断源 
 		sprintf(oledBuf,"Home");
         OLED_ShowString(46,0,(u8*)oledBuf,16);
-        sprintf(oledBuf,"Temp:%d.%d C",temperatureH,temperatureL);
+		sprintf(oledBuf,"Temp:     C");
         OLED_ShowString(0,16,(u8*)oledBuf,16);
-        sprintf(oledBuf,"Humi:%d.%d %%",humidityH,humidityL);
+        sprintf(oledBuf,"%d.%d",temperatureH,temperatureL);
+        OLED_ShowString(40,16,(u8*)oledBuf,16);
+		sprintf(oledBuf,"Humi:     %%");
         OLED_ShowString(0,32,(u8*)oledBuf,16);
-        sprintf(oledBuf,"Light:%.1f Lx",Light);
+		sprintf(oledBuf,"%d.%d",humidityH,humidityL);
+        OLED_ShowString(40,32,(u8*)oledBuf,16);
+		sprintf(oledBuf,"Light:       Lx");
         OLED_ShowString(0,48,(u8*)oledBuf,16);
+		sprintf(oledBuf,"%.1f",Light);
+        OLED_ShowString(48,48,(u8*)oledBuf,16);
         OLED_Refresh();
-		}
+	}
 }

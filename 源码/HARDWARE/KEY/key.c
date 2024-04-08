@@ -13,10 +13,6 @@ void KEY_Init(void)
 	GPIO_InitStructure.GPIO_Pin  = GPIO_Pin_0|GPIO_Pin_1;//PB0
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU; //设置成上拉输入
  	GPIO_Init(GPIOB, &GPIO_InitStructure);//初始化GPIOB
-	
-//	GPIO_InitStructure.GPIO_Pin  = GPIO_Pin_1;//PB1
-//	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU; //设置成上拉输入
-// 	GPIO_Init(GPIOB, &GPIO_InitStructure);//初始化GPIOB
  
 } 
 //按键处理函数

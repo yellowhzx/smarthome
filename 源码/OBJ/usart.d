@@ -31,6 +31,11 @@
 ..\obj\usart.o: ..\STM32F10x_FWLib\inc\misc.h
 ..\obj\usart.o: ..\SYSTEM\delay\delay.h
 ..\obj\usart.o: ..\SYSTEM\sys\sys.h
-..\obj\usart.o: G:\Study\Keil\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
+..\obj\usart.o: ..\SYSTEM\TIMER\timer.h
+..\obj\usart.o: ..\HARDWARE\OLED\oled.h
 ..\obj\usart.o: G:\Study\Keil\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+..\obj\usart.o: G:\Study\Keil\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+..\obj\usart.o: ..\HARDWARE\LED\led.h
+..\obj\usart.o: ..\HARDWARE\BEEP\beep.h
+..\obj\usart.o: G:\Study\Keil\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
 ..\obj\usart.o: G:\Study\Keil\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
