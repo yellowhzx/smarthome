@@ -22,8 +22,8 @@ u8 Led_Status = 0;  //LED部分
 float Light = 0;    //光照度部分
 
 char Pub_Buf[256];//上传数据
-const char *topic_Sub[] = {"/yellowhome/sub"};//上行数据
-const char topic_Pub[] = "/yellowhome/pub";//订阅命令
+const char *topic_Sub[] = {"/home/sub"};//上行数据
+const char topic_Pub[] = "/home/pub";//订阅命令
 
 unsigned short timeCount = 0;	//发送间隔变量
 unsigned short timeflag2s = 0;	//传感器发送标志变量
@@ -46,15 +46,15 @@ void sensor_task()
             Light = LIght_Intensity();
             UsartPrintf(USART_DEBUG,"光照度：%.1f lx\r\n",Light);
         }
-		
+
         /******************报警模块*******************/
-		if(!alarmBusy)
-		{
-			if(humidityH < 80 && temperatureH < 30 && Light < 10000)
-				alarmFlag = 0;
-			else
-				alarmFlag = 1;
-		}
+        if(!alarmBusy)
+        {
+            if(humidityH < 80 && temperatureH < 30 && Light < 10000)
+                alarmFlag = 0;
+            else
+                alarmFlag = 1;
+        }
 //		UsartPrintf(USART_DEBUG,"alarmBusy = %d\r\n",alarmBusy);
 //        UsartPrintf(USART_DEBUG,"alarmFlag = %d\r\n",alarmFlag);
         timeflag2s = 0;
@@ -89,53 +89,56 @@ void key_task()
     key = KEY_Scan(0);		//得到键值
     switch(key)
     {
-		case KEY0_PRES:
-			LED0 = !LED0;
-		break;
-		case KEY1_PRES:
-			alarmFlag = !alarmFlag;
-			LED1 = !LED1;
-			alarmBusy = !alarmBusy;
-		break;
-		default:
-			delay_ms(10);
+    case KEY0_PRES:
+        LED0 = !LED0;
+        break;
+    case KEY1_PRES:
+        alarmFlag = !alarmFlag;
+        LED1 = !LED1;
+        alarmBusy = !alarmBusy;
+        break;
+    default:
+        delay_ms(10);
     }
 }
 
 void voice_task()
 {
-	u8 i;
-	if(Uart3_Buffer[0] == 0xaa)
-	{
-		switch (Uart3_Buffer[1])
-		{
-			case 0x10://关灯
-				LED0 = 1;
-			break;
-			case 0x11://开灯
-				LED0 = 0;
-			break;
-			case 0x20://关闭报警器
-				alarmFlag = 0;
-				alarmBusy = 0;
-			break;
-			case 0x21://打开报警器
-				alarmFlag = 1;
-				alarmBusy = 1;
-			break;
-			case 0x30://当前温度
-				UsartPrintf(USART3,"%c",temperatureH);
-			break;
-			case 0x31://当前湿度
-				UsartPrintf(USART3,"%c",humidityH);
-			break;
-		}
-		for(i = 0;i < 2;i++)
-		{
-			Uart3_Buffer[i] = 0;
-		}
-		Uart3_Rx = 0;
-	}
+    u8 i;
+    if(Uart3_Buffer[0] == 0xaa)
+    {
+        switch (Uart3_Buffer[1])
+        {
+        case 0x10://关灯
+            LED0 = 1;
+            break;
+        case 0x11://开灯
+            LED0 = 0;
+            break;
+        case 0x20://关闭报警器
+            alarmFlag = 0;
+            alarmBusy = 0;
+            break;
+        case 0x21://打开报警器
+            alarmFlag = 1;
+            alarmBusy = 1;
+            break;
+        case 0x30://当前温度
+            UsartPrintf(USART3,"%c",temperatureH);
+            break;
+        case 0x31://当前湿度
+            UsartPrintf(USART3,"%c",humidityH);
+            break;
+		case 0x32://当前光照度
+            UsartPrintf(USART3,"%c",(uint8_t)Light);
+		break;
+        }
+        for(i = 0; i < 2; i++)
+        {
+            Uart3_Buffer[i] = 0;
+        }
+        Uart3_Rx = 0;
+    }
 }
 
 int main(void)
@@ -143,8 +146,8 @@ int main(void)
     delay_init();               //延时函数初始化
 
     LED_Init();                 //初始化与LED连接的硬件接口
-	
-	BEEP_Init();
+
+    BEEP_Init();
 
     KEY_Init();
 
@@ -162,13 +165,13 @@ int main(void)
 
     Usart1_Init(115200);//DEBUG串口
     Usart2_Init(115200);//stm32-esp8266通信串口
-	Usart3_Init(115200);//语音模块串口
+    Usart3_Init(115200);//语音模块串口
 
     UsartPrintf(USART_DEBUG, " Hardware init OK\r\n");
-    //ESP8266_Init();					//初始化ESP8266
+    ESP8266_Init();					//初始化ESP8266
 
-    //while(OneNet_DevLink())			//接入OneNET
-    delay_ms(500);
+    while(OneNet_DevLink())			//接入OneNET
+        delay_ms(500);
 
     BEEP = 0;				        //鸣叫提示接入成功
     delay_ms(250);
@@ -178,9 +181,9 @@ int main(void)
 
     while(1)
     {
-        //sensor_task();
-        //esp8266_task();
-		voice_task();
+        sensor_task();
+        esp8266_task();
+        voice_task();
         key_task();
     }
 }
